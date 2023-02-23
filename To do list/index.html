@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To do list</title>
+
+    <style></style>
+  </head>
+
+  <body>
+    <div class="main" style="background-color: gray">
+      <!-- heading -->
+      <div
+        style="background-color: blueviolet; color: white; text-align: center"
+      >
+        Tasking
+        <button class="add">Add</button>
+      </div>
+      <!-- heading //-->
+    </div>
+  </body>
+
+  <script>
+    // localStorage.clear();
+    // localStorage.setItem("tasks", "");
+
+    let add = document.querySelector(".add");
+    let arrOfTasks = [];
+    let content;
+
+    let doneButton;
+    let editButton;
+    let deleButton;
+
+    add.addEventListener("click", function (e) {
+      let promptMsg = prompt("Please inter your task");
+
+      if (promptMsg !== null && promptMsg !== "") {
+        content = document.createElement("div");
+        content.style.cssText =
+          "background-color: grey; display: flex; justify-content: space-around; ";
+
+        let buttonDone = document.createElement("button");
+        buttonDone.innerText = "Not Done";
+        buttonDone.className = "done";
+        let buttonEdit = document.createElement("button");
+        buttonEdit.innerText = "Edit";
+        buttonEdit.className = "edit";
+        let buttonDelete = document.createElement("button");
+        buttonDelete.innerText = "Delete";
+        buttonDelete.className = "delete";
+
+        content.appendChild(buttonDone);
+        content.appendChild(buttonEdit);
+        content.appendChild(buttonDelete);
+        let h1 = document.createElement("h1");
+        h1.className = "taskName";
+        h1.innerText = promptMsg;
+        content.appendChild(h1);
+        document.body.append(content);
+        doneButton = buttonDone;
+        editButton = buttonEdit;
+        deleButton = buttonDelete;
+        // console.log(doneButton);
+
+        let obj = {
+          taskName: promptMsg,
+          isDone: "Not Done",
+        };
+        if (localStorage.length !== 0) {
+          arrOfTasks = JSON.parse(localStorage.tasks);
+        }
+        arrOfTasks.push(obj);
+        localStorage.setItem("tasks", JSON.stringify(arrOfTasks));
+      }
+    });
+
+    // Delete btn //
+
+    document.addEventListener("click", function (e) {
+      if (e.target.className == "delete") {
+        let temp = JSON.parse(localStorage.tasks);
+        for (let i = 0; i < temp.length; i++) {
+          if (temp[i].taskName == e.target.parentElement.lastChild.innerText) {
+            temp.splice(i, 1);
+            localStorage.setItem("tasks", JSON.stringify(temp));
+            // arrOfTasks = temp;
+            break;
+          }
+        }
+        e.target.parentElement.remove();
+
+        // Edit btn //
+      } else if (e.target.className == "edit") {
+        let temp = JSON.parse(localStorage.tasks);
+        for (let i = 0; i < temp.length; i++) {
+          if (temp[i].taskName == e.target.parentElement.lastChild.innerText) {
+            let editMsg = prompt("Please inter your task");
+            if (editMsg !== null && editMsg !== "") temp[i].taskName = editMsg;
+            localStorage.setItem("tasks", JSON.stringify(temp));
+            content.lastChild.innerText = editMsg;
+          }
+        }
+      }
+
+      // Done btn //
+      else if (e.target.className == "done") {
+        let temp = JSON.parse(localStorage.tasks);
+        for (let i = 0; i < temp.length; i++) {
+          if (temp[i].taskName == e.target.parentElement.lastChild.innerText) {
+            temp[i].isDone == "Not Done"
+              ? (temp[i].isDone = "Done")
+              : (temp[i].isDone = "Not Done");
+            localStorage.setItem("tasks", JSON.stringify(temp));
+            content.firstChild.innerText = temp[i].isDone;
+          }
+        }
+      }
+    });
+
+    // Edit btn
+
+    // localStorage => reload, close
+
+    if (localStorage.length)
+      if (localStorage.tasks.length)
+        for (let i = 0; i < JSON.parse(localStorage.tasks).length; i++) {
+          content = document.createElement("div");
+          content.style.cssText =
+            "background-color: grey; display: flex; justify-content: space-around; ";
+
+          let buttonDone = document.createElement("button");
+          buttonDone.innerText = JSON.parse(localStorage.tasks)[i].isDone;
+          buttonDone.className = "done";
+          let buttonEdit = document.createElement("button");
+          buttonEdit.innerText = "Edit";
+          buttonEdit.className = "edit";
+          let buttonDelete = document.createElement("button");
+          buttonDelete.innerText = "Delete";
+          buttonDelete.className = "delete";
+
+          content.appendChild(buttonDone);
+          content.appendChild(buttonEdit);
+          content.appendChild(buttonDelete);
+          let h1 = document.createElement("h1");
+          h1.className = "taskName";
+          h1.innerText = JSON.parse(localStorage.tasks)[i].taskName;
+          content.appendChild(h1);
+          document.body.append(content);
+          // console.log(i);
+        }
+  </script>
+</html>
